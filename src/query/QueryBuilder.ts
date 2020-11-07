@@ -1,7 +1,8 @@
+import { Result } from "neo4j-driver";
 import { ConnectOpts } from "net";
 import { Connection } from "../connection/Connection";
 import { PlatformUtils } from "../platform/Platform";
-import { BaseNodeEntity, _findProps } from "../repository/BaseNodeEntity";
+import { BaseNodeEntity } from "../repository/BaseNodeEntity";
 
 export interface EntityStore {
   [key: string]: BaseNodeEntity;
@@ -13,14 +14,18 @@ export class QueryBuilder {
   _queryRaw = "";
   _queryArgs = {};
 
-  create(entity: BaseNodeEntity): [this, EntityStore] {
+  getEntityIndice(entity: BaseNodeEntity) {
+    return PlatformUtils.getKeyByValue(this.entityStore, entity);
+  }
+
+  create(entity: BaseNodeEntity) {
     const indice = PlatformUtils.randomIndice(5);
 
     this._queryRaw = `CREATE(${indice}:${entity._getNodeType()} $props_${indice}) `;
-    this._queryArgs[`props_${indice}`] = _findProps(entity);
+    this._queryArgs[`props_${indice}`] = BaseNodeEntity._findProps(entity);
     this.entityStore[indice] = entity;
 
-    return [this, this.entityStore];
+    return this;
   }
 
   ret(r: string[]): this {
@@ -28,7 +33,7 @@ export class QueryBuilder {
     return this;
   }
 
-  async run(connection: Connection): Promise<any> {
+  async run(connection: Connection): Promise<Result> {
     return await connection.driver.session.run(this._queryRaw, {
       ...this._queryArgs,
     });
