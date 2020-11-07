@@ -3,5 +3,5 @@ export const GraphProp = (): PropertyDecorator => (
   target: any,
   propKey: string
 ) => {
-  Reflect.defineMetadata("isGraphProp", true, target, propKey);
+  Reflect.defineMetadata("isNodeProp", true, target, propKey);
 };
