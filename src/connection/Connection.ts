@@ -1,4 +1,5 @@
 import neo4j, { Driver, Session } from "neo4j-driver";
+import { setConnection } from "..";
 import { NeoDriver } from "../driver/DriverFactory";
 import { CannotConnectAlreadyConnectedError } from "../error/AlreadyConnectedError";
 import { CannotDisconnectWithoutConnection } from "../error/CannotDisconnectWithoutConnection";
@@ -36,6 +37,7 @@ export class Connection {
 
     // Force ReadOnly Prop;
     (<any>this)["isConnected"] = true;
+    setConnection(this);
 
     return this;
   }
@@ -47,5 +49,6 @@ export class Connection {
     await this.driver.disconnect();
 
     (<any>this)["isConnected"] = false;
+    setConnection(undefined);
   }
 }
