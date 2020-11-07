@@ -1,9 +1,12 @@
 interface RelationProps {
-  [key: string]: boolean | number | string;
+  [key: string]: any;
 }
+
+export type RelationDirection = "bidirectional" | "unidirectional";
 
 export interface RelationMetadata {
   target: Function | string;
   name: string;
-  props: RelationProps;
+  // props: RelationProps;
+  // type: RelationDirection;
 }
