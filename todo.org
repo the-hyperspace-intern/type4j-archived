@@ -3,14 +3,3 @@
 #+LANGUAGE:  en
 
 * Introduction
-** Whats type4j
-type4j is ...
-** Why making it from Scratch ?
-Well, idk.
-
-* Getting Started
-Here is some doc I found about the subject
-
-* Installation
-
-* Usage
