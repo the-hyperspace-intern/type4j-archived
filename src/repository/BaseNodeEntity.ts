@@ -1,4 +1,5 @@
 import { stringify } from "querystring";
+import { ObjectType } from "../common/ObjectType";
 import { getConnection } from "..";
 import { QueryBuilder } from "../query/QueryBuilder";
 
@@ -12,6 +13,22 @@ export class BaseNodeEntity {
         props[prop] = entity[prop];
     });
     return props;
+  }
+
+  // TODO: find node entity
+  static async find<T extends BaseNodeEntity>(
+    this: ObjectType<T>,
+    id: number
+  ): Promise<T> {
+    return {} as T;
+  }
+  //TODO: Delete Node
+  async delete() {
+    const queryBuilder = new QueryBuilder();
+    const [_, selfIndice] = queryBuilder.findOne(this.id);
+    queryBuilder.del([selfIndice]);
+
+    await queryBuilder.run(getConnection());
   }
 
   _getNodeType() {
