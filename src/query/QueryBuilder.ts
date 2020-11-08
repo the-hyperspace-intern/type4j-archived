@@ -18,7 +18,7 @@ export class QueryBuilder {
     return PlatformUtils.getKeyByValue(this.entityStore, entity);
   }
 
-  create(entity: BaseNodeEntity) {
+  create(entity: BaseNodeEntity): QueryBuilder {
     const indice = PlatformUtils.randomIndice(5);
 
     this._queryRaw = `CREATE(${indice}:${entity._getNodeType()} $props_${indice}) `;
@@ -31,6 +31,17 @@ export class QueryBuilder {
   ret(r: string[]): this {
     this._queryRaw += `RETURN ${r.join(", ")}`;
     return this;
+  }
+
+  findOne(id: number): [QueryBuilder, string] {
+    const indice = PlatformUtils.randomIndice(5);
+    this._queryRaw = `MATCH(${indice}) WHERE ID(${indice}) = $id_${indice} `;
+    this._queryArgs[`id_${indice}`] = id;
+    return [this, indice];
+  }
+
+  del(indices: string[]) {
+    this._queryRaw += `DETACH DELETE ${indices.join(", ")}`;
   }
 
   async run(connection: Connection): Promise<Result> {
